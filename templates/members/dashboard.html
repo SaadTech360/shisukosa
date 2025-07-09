@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+{% if message %}
+        <div class="alert alert-info m-2 w-60" role="alert">
+            {{message}}
+          </div>
+        {% endif %}
+    <div class="container-fluid py-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2>Admin Dashboard <span class="text-success">[ Welcome {{request.user.first_name}}  {{request.user.last_name}} ]</span></h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Members</h5>
+                        <h2 class="mb-0">{{active_members}}</h2>
+                        <p class="card-text"><small>+12% from last month</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Active Events</h5>
+                        <h2 class="mb-0">8</h2>
+                        <p class="card-text"><small>2 upcoming this week</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">New Messages</h5>
+                        <h2 class="mb-0">24</h2>
+                        <p class="card-text"><small>5 unread</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body">
+                        <h5 class="card-title">Pending Approvals</h5>
+                        <h2 class="mb-0">{{pending_requests}}</h2>
+                        <p class="card-text"><small>3 new members</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity and Quick Actions -->
+        <div class="row">
+            <div class="col-md-8 mb-4">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Recent Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span><strong>Jennifer Lee</strong> updated her profile</span>
+                                    <small class="text-muted">10 mins ago</small>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span><strong>Michael Johnson</strong> registered for "Tech Networking"</span>
+                                    <small class="text-muted">25 mins ago</small>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span><strong>New member</strong> Sarah Miller registered</span>
+                                    <small class="text-muted">1 hour ago</small>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span><strong>You</strong> created a new event</span>
+                                    <small class="text-muted">2 hours ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'accounts:register' %}" class="btn bg-success text-white">
+                                <i class="fas fa-user-plus me-2"></i> Add New Member
+                            </a>
+                            <a href="#" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus me-2"></i> Create Event
+                            </a>
+                            <a href="#" class="btn btn-info">
+                                <i class="fas fa-envelope me-2"></i> Send Newsletter
+                            </a>
+                            <a href="#" class="btn btn-warning">
+                                <i class="fas fa-users me-2"></i> Manage Members
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        
+        <!-- Recent Members -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Recent Membership Requests</h5>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+
+                                        <th>Graduation Year</th>
+                                        <th>Phone</th>
+                                        <th>Role</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for member in membership_request %}
+
+                                    <tr>
+                                        <td>{{ member.first_name}}</td>
+                                        <td>{{ member.last_name}}</td>
+                                        <td>{{ member.email}}</td>
+                                        <td>{{ member.graduation_year}}</td>
+                                        <td>{{ member.phone}}</td>
+                                        <td>Software Engineer</td>
+                                        <td>
+                                            <a href="{% url 'members:accept' member.id %}" class="btn btn-sm btn-outline-primary">Accept</a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'members:delete' member.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

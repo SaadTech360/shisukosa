@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+
+{% if message %}
+<div class="alert alert-info m-2 w-60" role="alert">
+    {{message}}
+  </div>
+{% endif %}
+
+<!-- Registration Form -->
+<form  action='' id="registration-form" method="POST">
+    {% csrf_token %}
+
+    {{form.as_p}}
+        
+                
+
+    <button type="submit" class="btn btn-primary w-100">Create Account</button>
+
+</form>
+
+{% endblock %}

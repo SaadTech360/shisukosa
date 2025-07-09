@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Association - Login & Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --main-dark-green: #1a472a;
+            --secondary-green: #2a623d;
+            --light-green: #5d8b75;
+            --extra-light-green: #e8f5e9;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/api/placeholder/1920/1080') center/cover no-repeat;
+        }
+        
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .auth-header {
+            background-color: var(--main-dark-green);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--secondary-green);
+        }
+        
+        .auth-header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .auth-body {
+            padding: 30px;
+            background-color: white;
+        }
+        
+        .auth-toggle {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        
+        .auth-toggle-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-toggle-btn.active {
+            background-color: var(--main-dark-green);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: var(--main-dark-green);
+            border-color: var(--main-dark-green);
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--secondary-green);
+            border-color: var(--secondary-green);
+        }
+        
+        .form-control:focus {
+            border-color: var(--light-green);
+            box-shadow: 0 0 0 0.25rem rgba(26, 71, 42, 0.25);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 7px;
+        }
+        
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 5px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn.google {
+            background-color: #DB4437;
+        }
+        
+        .social-btn.facebook {
+            background-color: #4267B2;
+        }
+        
+        .social-btn.linkedin {
+            background-color: #0077B5;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .divider span {
+            padding: 0 10px;
+            color: #777;
+        }
+        
+        .input-group-text {
+            background-color: var(--main-dark-green);
+            color: white;
+            border-color: var(--main-dark-green);
+        }
+        
+        .password-toggle {
+            cursor: pointer;
+        }
+        
+        .year-select {
+            width: 100%;
+        }
+        
+        #registration-form {
+            display: none;
+        }
+        
+        .logo {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--main-dark-green);
+            border-color: var(--main-dark-green);
+        }
+        
+        .bg-success {
+            background-color: var(--main-dark-green) !important;
+        }
+        
+        .validation-feedback {
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <img src="/api/placeholder/80/80" alt="University Logo" class="logo">
+            <h2>Alumni Association</h2>
+        </div>
+        
+        <div class="auth-body">
+            <div class="auth-toggle">
+                <div class="auth-toggle-btn active" id="login-toggle">Login</div>
+                <div class="auth-toggle-btn" id="register-toggle">Register</div>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="login-form" action="" method="POST">
+                <div class="form-group">
+                    <label for="login-email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" class="form-control" id="login-email" placeholder="youremail@example.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="login-password" placeholder="Enter your password" required>
+                        <span class="input-group-text password-toggle" onclick="togglePassword('login-password')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="remember-me">
+                        <label class="form-check-label" for="remember-me">Remember me</label>
+                    </div>
+                    <a href="#" class="text-decoration-none" style="color: var(--main-dark-green);">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+                
+            </form>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                A simple danger alert—check it out!
+              </div>
+            {% endif %}
+            <!-- Registration Form -->
+            <form  action='' id="registration-form" method="POST">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="reg-firstname" class="form-label">{{ form.first_name.label|title}} </label>
+                            <!-- <input type="text" class="form-control" id="reg-firstname" placeholder="First Name" required> -->
+                            {{ form.first_name}}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="reg-lastname" class="form-label">Last Name</label>
+                            {{ form.first_name}}
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="reg-firstname" class="form-label"> Nick Name</label>
+                            <!-- <input type="text" class="form-control" id="reg-firstname" placeholder="First Name" required> -->
+                            {{ form.nick_name}}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        {{ form.email}}
+
+                    </div>
+
+                    <div class="form-group">
+                    <label for="reg-email" class="form-label">Phone</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                        {{ form.phone}}
+
+                    </div>
+                    <div id="email-validation" class="validation-feedback"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="graduation-year" class="form-label">Graduation Year</label>
+                    {{ form.graduation_year}}
+
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        {{ form.password1}}
+
+                        <span class="input-group-text password-toggle" onclick="togglePassword('reg-password')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div id="password-strength" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <div id="password-feedback" class="validation-feedback"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-confirm-password" class="form-label">Confirm Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        {{ form.password2}}
+
+                    </div>
+                    <div id="password-match" class="validation-feedback"></div>
+                </div>
+<!--                 
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="terms-check" required>
+                    <label class="form-check-label" for="terms-check">
+                        I agree to the <a href="#" style="color: var(--main-dark-green);">Terms of Service</a> and <a href="#" style="color: var(--main-dark-green);">Privacy Policy</a>
+                    </label>
+                </div>
+                 -->
+                <button type="submit" class="btn btn-primary w-100">Create Account</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Toast for Notifications -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="notification-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <strong class="me-auto" id="toast-title">Notification</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toast-message">
+            Message here
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+
+    // Toggle between login and registration forms
+    document.getElementById('login-toggle').addEventListener('click', function() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('registration-form').style.display = 'none';
+        this.classList.add('active');
+        document.getElementById('register-toggle').classList.remove('active');
+    });
+    
+    document.getElementById('register-toggle').addEventListener('click', function() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('registration-form').style.display = 'block';
+
+        this.classList.add('active');
+        document.getElementById('login-toggle').classList.remove('active');
+    });
+    
+    // Password visibility toggle
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = input.nextElementSibling.querySelector('i');
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+    
+    // Populate graduation years (current year down to 70 years ago)
+    function populateYears() {
+        const yearSelect = document.getElementById('graduation-year');
+        const currentYear = new Date().getFullYear();
+        
+        for (let year = currentYear + 5; year >= currentYear - 40; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        }
+    }
+    
+    // Password strength checker
+    function checkPasswordStrength(password) {
+        const strengthBar = document.getElementById('password-strength');
+        const feedback = document.getElementById('password-feedback');
+        
+        // Check password strength
+        let strength = 0;
+        let suggestions = [];
+        
+        if (password.length === 0) {
+            strengthBar.style.width = '0%';
+            strengthBar.className = 'progress-bar';
+            feedback.textContent = '';
+            return;
+        }
+        
+        // Length check
+        if (password.length < 8) {
+            suggestions.push('Use at least 8 characters');
+        } else {
+            strength += 25;
+        }
+        
+        // Uppercase letter check
+        if (!/[A-Z]/.test(password)) {
+            suggestions.push('Add uppercase letters');
+        } else {
+            strength += 25;
+        }
+        
+        // Lowercase letter check
+        if (!/[a-z]/.test(password)) {
+            suggestions.push('Add lowercase letters');
+        } else {
+            strength += 25;
+        }
+        
+        // Number or special character check
+        if (!/[0-9!@#$%^&*]/.test(password)) {
+            suggestions.push('Add numbers or special characters');
+        } else {
+            strength += 25;
+        }
+        
+        // Update strength bar
+        strengthBar.style.width = strength + '%';
+        
+        // Update strength bar color and feedback
+        if (strength < 50) {
+            strengthBar.className = 'progress-bar bg-danger';
+            feedback.style.color = '#dc3545';
+            feedback.textContent = 'Weak password. ' + suggestions.join('. ');
+        } else if (strength < 75) {
+            strengthBar.className = 'progress-bar bg-warning';
+            feedback.style.color = '#ffc107';
+            feedback.textContent = 'Moderate password. ' + suggestions.join('. ');
+        } else {
+            strengthBar.className = 'progress-bar bg-success';
+            feedback.style.color = '#28a745';
+            feedback.textContent = suggestions.length ? 'Strong password. ' + suggestions.join('. ') : 'Strong password!';
+        }
+    }
+    
+    // Check if passwords match
+    function checkPasswordsMatch() {
+        const password = document.getElementById('reg-password').value;
+        const confirmPassword = document.getElementById('reg-confirm-password').value;
+        const feedback = document.getElementById('password-match');
+        
+        if (confirmPassword.length === 0) {
+            feedback.textContent = '';
+            return;
+        }
+        
+        if (password === confirmPassword) {
+            feedback.style.color = '#28a745';
+            feedback.textContent = 'Passwords match!';
+        } else {
+            feedback.style.color = '#dc3545';
+            feedback.textContent = 'Passwords do not match!';
+        }
+    }
+    
+    // Email validation
+    function validateEmail() {
+        const email = document.getElementById('reg-email').value;
+        const feedback = document.getElementById('email-validation');
+        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        
+        if (email.length === 0) {
+            feedback.textContent = '';
+            return;
+        }
+        
+        if (regex.test(email)) {
+            feedback.style.color = '#28a745';
+            feedback.textContent = 'Valid email address';
+        } else {
+            feedback.style.color = '#dc3545';
+            feedback.textContent = 'Please enter a valid email address';
+        }
+    }
+    
+    // Show notification toast
+    function showNotification(title, message, success = true) {
+        const toastElement = document.getElementById('notification-toast');
+        const toastTitle = document.getElementById('toast-title');
+        const toastMessage = document.getElementById('toast-message');
+        const toastHeader = toastElement.querySelector('.toast-header');
+        
+        toastTitle.textContent = title;
+        toastMessage.textContent = message;
+        
+        if (success) {
+            toastHeader.classList.remove('bg-danger');
+            toastHeader.classList.add('bg-success');
+        } else {
+            toastHeader.classList.remove('bg-success');
+            toastHeader.classList.add('bg-danger');
+        }
+        
+        const toast = new bootstrap.Toast(toastElement);
+        toast.show();
+    }
+    
+    // Handle login form submission
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        // Simple client-side validation
+        if (!email || !password) {
+            showNotification('Error', 'Please fill in all fields', false);
+            return;
+        }
+        
+        // Simulate login process
+        // In a real application, you would send this data to your backend
+        setTimeout(() => {
+            showNotification('Success', 'Login successful! Redirecting...');
+            
+            // Simulate redirect after successful login
+            setTimeout(() => {
+                window.location.href = "dashboard.html";  // Replace with your dashboard page
+            }, 1500);
+        }, 1000);
+    });
+    
+    // Handle registration form submission
+    document.getElementById('registration-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const firstName = document.getElementById('reg-firstname').value;
+        const lastName = document.getElementById('reg-lastname').value;
+        const email = document.getElementById('reg-email').value;
+        const graduationYear = document.getElementById('graduation-year').value;
+        const password = document.getElementById('reg-password').value;
+        const confirmPassword = document.getElementById('reg-confirm-password').value;
+        const termsChecked = document.getElementById('terms-check').checked;
+        
+        // Simple client-side validation
+        if (!firstName || !lastName || !email || !graduationYear || !password || !confirmPassword) {
+            showNotification('Error', 'Please fill in all fields', false);
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            showNotification('Error', 'Passwords do not match', false);
+            return;
+        }
+        
+        if (!termsChecked) {
+            showNotification('Error', 'You must agree to the Terms of Service', false);
+            return;
+        }
+        
+        // Simulate registration process
+        // In a real application, you would send this data to your backend
+        setTimeout(() => {
+            showNotification('Success', 'Registration successful! Please check your email to verify your account.');
+            
+            // Reset form and switch to login after successful registration
+            setTimeout(() => {
+                document.getElementById('registration-form').reset();
+                document.getElementById('login-toggle').click();
+            }, 2000);
+        }, 1000);
+    });
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Populate graduation years
+        populateYears();
+        
+        // Set up event listeners for real-time validation
+        document.getElementById('reg-password').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+            checkPasswordsMatch();
+        });
+        
+        document.getElementById('reg-confirm-password').addEventListener('input', function() {
+            checkPasswordsMatch();
+        });
+        
+        document.getElementById('reg-email').addEventListener('input', function() {
+            validateEmail();
+        });
+    });
+</script>
+</body>
+</html>

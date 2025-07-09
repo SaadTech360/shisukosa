@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+<!-- Login Form -->
+{% if message %}
+<div class="alert alert-info m-2 w-60" role="alert">
+    {{message}}
+  </div>
+{% endif %}
+
+ <form id="login-form" action="" method="POST">
+    <h1> {{ request.user.email}}</h1>
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="login-email" class="form-label">Email Address</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+            <input type="email" class="form-control" id="login-email" name="login-email" placeholder="youremail@example.com" required>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="login-password" class="form-label">Password</label>
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+            <input type="password" class="form-control" id="login-password" name="login-password" placeholder="Enter your password" required>
+            <span class="input-group-text password-toggle" onclick="togglePassword('login-password')">
+                <i class="fas fa-eye"></i>
+            </span>
+        </div>
+    </div>
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="remember-me">
+            <label class="form-check-label" for="remember-me">Remember me</label>
+        </div>
+        <a href="#" class="text-decoration-none" style="color: var(--main-dark-green);">Forgot password?</a>
+    </div>
+    
+    <button type="submit" class="btn btn-primary w-100">Login</button>
+    
+</form>
+{% endblock %}

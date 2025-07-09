@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- Filter Options -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="btn-group">
+                    <a href="#" class="btn btn-outline-success active">
+                        <i class="fas fa-th-large"></i> Grid
+                    </a>
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="fas fa-list"></i> List
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex justify-content-md-end">
+                    <select class="form-select me-2" style="max-width: 200px;">
+                        <option value="">All Graduation Years</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="older">2019 and older</option>
+                    </select>
+                    <select class="form-select" style="max-width: 200px;">
+                        <option value="">All Industries</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Education">Education</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members Grid -->
+        <div class="row g-4">
+            {% for member in members %}
+
+            <div class="col-md-6 ">
+                <div class="card h-100">
+                    <img src="{{ member.image }}" class="card-img-top" alt="{{ member.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ member.first_name }}</h5>
+                        <p class="grad-year">Class of {{ member.graduation_year }}</p>
+                        <p class="card-text">{{ member.nick_name }} at {{ member.email }}</p>
+                        <p class="card-text"><small class="text-muted">{{ member.phone }}</small></p>
+                        <div class="mb-2">
+                            <span class="badge bg-success">{{ member.}}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
+                        <a href="mailto:{{ member.email }}" class="btn btn-sm btn-outline-success">
+                            <i class="fas fa-envelope me-1"></i> Contact
+                        </a>
+                        <a href="{{ member.linkedin }}" class="btn btn-sm btn-outline-success">
+                            <i class="fab fa-linkedin me-1"></i> Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="my-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
