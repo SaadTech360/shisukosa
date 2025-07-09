@@ -6,11 +6,18 @@ from django.http   import HttpResponseForbidden
 from .forms   import EventsCreationForm
 
 def homepage(request):
-    return render(request,'members/home.html')
+    admins = ShisMemberUser.objects.filter(is_staff=True)
+    return render(request,'members/home.html',{'admins':admins})
 
 def members_list(request):
     members = ShisMemberUser.objects.all()
     return render(request,'members/member-list.html',{'members':members})
+
+def membership_request_list(request):
+    return render(request,'members/membership_request.html')
+
+def membership_request_detail(request):
+    return render(request,'members/membership_detail.html')
 
 @login_required
 def create_admin_user(request):
