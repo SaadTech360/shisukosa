@@ -9,85 +9,80 @@
                 <a href="{% url 'members:create_event' %}" class="btn bg-success text-white">
                     <i class="fas fa-plus me-2"></i> Create Event
                 </a>
-                {% else %}
-                <p></p>
                 {% endif %}
             </div>
         </div>
 
         <div class="row g-4">
+            {% for event in events %}
             <!-- Event Cards -->
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/600x400" class="card-img-top" alt="Event Image">
+                <div class="card">
+                    {% if event.image %}
+                    <img src="{{ event.image.url }}" class="card-img-top img-fluid " alt="{{ event.title }}">
+                    {% else %}
+                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-calendar-alt fa-3x"></i>
+                    </div>
+                    {% endif %}
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge bg-success">Upcoming</span>
-                            <small class="text-muted">June 15, 2023</small>
+                            <span class="badge bg-{% if event.status == 'Upcoming' %}success{% else %}secondary{% endif %}">
+                                {{ event.status }}
+                            </span>
+                            <small class="text-muted">{{ event.date|date:'F j, Y' }}</small>
                         </div>
-                        <h5 class="card-title">Tech Networking Night</h5>
-                        <p class="card-text">Join us for an evening of networking with alumni in the tech industry.</p>
+                        <h5 class="card-title">{{ event.title }}</h5>
+                        <p class="card-text">{{ event.description|truncatechars:100 }}</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-users me-1"></i> 45 attending</span>
-                            <span><i class="fas fa-map-marker-alt me-1"></i> San Francisco</span>
+                            <span><i class="fas fa-clock me-1"></i> {{ event.time|time:'g:i A' }}</span>
+                            <span><i class="fas fa-map-marker-alt me-1"></i> {{ event.location|truncatechars:15 }}</span>
                         </div>
                     </div>
                     <div class="card-footer bg-white border-top-0">
-                        <a href="#" class="btn btn-sm btn-outline-primary w-100">View Details</a>
+                        <a href="" class="btn btn-sm btn-outline-primary w-100">
+                            View Details
+                        </a>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/600x400" class="card-img-top" alt="Event Image">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge bg-success">Upcoming</span>
-                            <small class="text-muted">June 22, 2023</small>
-                        </div>
-                        <h5 class="card-title">Career Development Workshop</h5>
-                        <p class="card-text">Learn valuable skills to advance your career from industry experts.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-users me-1"></i> 32 attending</span>
-                            <span><i class="fas fa-map-marker-alt me-1"></i> Virtual</span>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white border-top-0">
-                        <a href="#" class="btn btn-sm btn-outline-primary w-100">View Details</a>
-                    </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <h4 class="mb-0">No Upcoming Events Available</h4>
                 </div>
             </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <img src="https://via.placeholder.com/600x400" class="card-img-top" alt="Event Image">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge bg-secondary">Past</span>
-                            <small class="text-muted">May 18, 2023</small>
-                        </div>
-                        <h5 class="card-title">Alumni Reunion</h5>
-                        <p class="card-text">Annual alumni reunion with food, drinks, and great conversations.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-users me-1"></i> 78 attended</span>
-                            <span><i class="fas fa-map-marker-alt me-1"></i> New York</span>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white border-top-0">
-                        <a href="#" class="btn btn-sm btn-outline-primary w-100">View Details</a>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
 
         <!-- Past Events Section -->
         <div class="row mt-5">
             <div class="col-12">
-                <h4 class="mb-4">Past Events</h4>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4>Past Events</h4>
+                    {% if past_events.has_other_pages %}
+                    <div class="btn-group" role="group">
+                        {% if past_events.has_previous %}
+                        <a href="?past_page={{ past_events.previous_page_number }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        {% endif %}
+                        <button type="button" class="btn btn-outline-secondary disabled">
+                            Page {{ past_events.number }} of {{ past_events.paginator.num_pages }}
+                        </button>
+                        {% if past_events.has_next %}
+                        <a href="?past_page={{ past_events.next_page_number }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if past_events %}
                 <div class="table-responsive">
                     <table class="table table-hover">
-                        <thead>
+                        <thead class="table-light">
                             <tr>
                                 <th>Event Name</th>
                                 <th>Date</th>
@@ -97,36 +92,32 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for event in past_events %}
                             <tr>
-                                <td>Spring Networking Mixer</td>
-                                <td>April 12, 2023</td>
-                                <td>Chicago</td>
-                                <td>56</td>
+                                <td>{{ event.title }}</td>
+                                <td>{{ event.date|date:"M j, Y" }}</td>
+                                <td>{{ event.location }}</td>
+                                <td>{{ event.attendees.count }}</td>
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                    <a href="" class="btn btn-sm btn-outline-primary">
+                                        View
+                                    </a>
+                                    {% if request.user.is_staff %}
+                                    <a href="" class="btn btn-sm btn-outline-success ms-1">
+                                        Report
+                                    </a>
+                                    {% endif %}
                                 </td>
                             </tr>
-                            <tr>
-                                <td>Leadership Conference</td>
-                                <td>March 8, 2023</td>
-                                <td>Virtual</td>
-                                <td>112</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Industry Panel: Healthcare</td>
-                                <td>February 15, 2023</td>
-                                <td>Boston</td>
-                                <td>43</td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
+                {% else %}
+                <div class="alert alert-info text-center">
+                    <h4 class="mb-0">No Past Events Available</h4>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

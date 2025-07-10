@@ -4,6 +4,7 @@ from accounts.forms   import MembersRegisterForm
 from django.contrib.auth.decorators  import login_required
 from django.http   import HttpResponseForbidden
 from .forms   import EventsCreationForm
+from .models   import Events
 
 def homepage(request):
     admins = ShisMemberUser.objects.filter(is_staff=True)
@@ -38,6 +39,7 @@ def create_admin_user(request):
     else:
         form = MembersRegisterForm()
     return render(request,'members/add_admin.html',{'form':form})
+
 @login_required
 def accept_member(request,pk):
     pending_member = get_object_or_404(ShisMemberUser,pk=pk)
@@ -64,7 +66,9 @@ def admin_dashboard(request):
         return HttpResponseForbidden('Only Admins are Allow to Access This Side')
     
 def event(request):
-    return render(request,'members/events.html')
+    events = Events.objects.all()
+    past_events = Events.objects.filter(status='DONE')
+    return render(request,'members/events.html',{'events':events,'past_events':past_events})
 
 def create_event(request):
     if request.user.is_staff and request.method == 'POST':
@@ -73,7 +77,7 @@ def create_event(request):
             form.save()
             message = ' Event Created Successfully.'
         else:
-            message = ' Event Created Successfully.'
+            message = ' Error while creating Event.'
         return render(request,'members/create_event.html',{'form':form,'message':message})
     elif not request.user.is_staff:
         return HttpResponseForbidden('Only admin is allow to Create Events.')
@@ -81,7 +85,6 @@ def create_event(request):
         form = EventsCreationForm()
     return render(request,'members/create_event.html',{'form':form})
 
-    
     
 def gallery(request):
     return render(request,'members/gallery.html')

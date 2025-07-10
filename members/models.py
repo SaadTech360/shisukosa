@@ -1,6 +1,9 @@
 from django.db import models
 
 class Events(models.Model):
+    class Meta:
+        verbose_name_plural = 'events'
+
     EVENTS_STATUS = (
          ('UPCOMING','upcoming'),
          ('DONE','done')
@@ -15,4 +18,5 @@ class Events(models.Model):
     
     def __str__(self):
         return self.events.title
+    
 
