@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
 
 {% block contents %}
 
@@ -19,7 +21,7 @@
                         <form action="" method="post">
                             {% csrf_token %}
                             
-                            {{ form.as_p }}
+                            {{ form| crispy}}
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a class="btn btn-outline-secondary me-md-2" href="{% url 'members:dashboard' %}">
                                     Cancel

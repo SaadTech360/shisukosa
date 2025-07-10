@@ -8,8 +8,9 @@
   </div>
 {% endif %}
 
+<div class="container">
  <form id="login-form" action="" method="POST">
-    <h1> {{ request.user.email}}</h1>
+    <h3 class=" text-center  p-2"> <u> Sign In</u></h3>
     {% csrf_token %}
     <div class="form-group">
         <label for="login-email" class="form-label">Email Address</label>
@@ -38,7 +39,11 @@
         <a href="#" class="text-decoration-none" style="color: var(--main-dark-green);">Forgot password?</a>
     </div>
     
-    <button type="submit" class="btn btn-primary w-100">Login</button>
+    <div class="m-2 text-center">
+        <button type="submit" class="btn btn-primary ">Login</button>
+
+    </div>
     
 </form>
+</div>
 {% endblock %}

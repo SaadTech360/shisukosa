@@ -25,7 +25,7 @@ def login_member(request):
         user = authenticate(email=email,password=password)
         if user is not None:
             login(request,user)
-            message = 'Logged in Successful'
+            return redirect('/')
         else:
             message = 'Error Trying To Log In.'
         return render(request,'accounts/login.html',{'message':message})
