@@ -85,6 +85,12 @@ def create_event(request):
         form = EventsCreationForm()
     return render(request,'members/create_event.html',{'form':form})
 
+def event_detail(request,pk):
+    event = get_object_or_404(Events,pk=pk)
+    return render(request,'members/event_detail.html',{'event':event})
     
 def gallery(request):
     return render(request,'members/gallery.html')
+
+def gallery_upload(request):
+    return render(request,'members/gallery_upload.html')

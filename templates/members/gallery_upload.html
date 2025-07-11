@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block contents %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{% url 'members:events' %}">Events</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'members:event_detail' event.id %}">{{ event.title|truncatechars:20 }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Upload Photos</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="card-body">
+                    <h3 class="mb-4">Upload Photos to Gallery</h3>
+                    
+                    <form method="post" action="{% url 'members:upload_event_gallery' event.id %}" enctype="multipart/form-data" class="dropzone" id="galleryUploadForm">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4 border rounded p-4 text-center dz-message needsclick">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                            <h5>Drag and drop files here or click to browse</h5>
+                            <p class="text-muted">Supported formats: JPG, PNG (Max 5MB each)</p>
+                            <input type="file" name="images" multiple accept="image/*" style="display: none;" id="fileInput">
+                            <button type="button" class="btn btn-outline-primary mt-2" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-folder-open me-2"></i> Select Files
+                            </button>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="caption" class="form-label">Gallery Title/Caption</label>
+                            <input type="text" class="form-control" id="caption" name="caption" placeholder="E.g., 'Annual Conference 2023 - Day 1'">
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="notifyAttendees" name="notify_attendees">
+                            <label class="form-check-label" for="notifyAttendees">Notify attendees about new gallery photos</label>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'members:event_detail' event.id %}" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload me-2"></i> Upload Photos
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Preview Section -->
+                    <div class="mt-5">
+                        <h5 class="mb-3">Current Gallery Photos</h5>
+                        {% if event.gallery_images.all %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> New photos will be added to the existing gallery
+                        </div>
+                        <div class="row g-3">
+                            {% for image in event.gallery_images.all|slice:":6" %}
+                            <div class="col-6 col-md-4">
+                                <div class="card">
+                                    <img src="{{ image.image.url }}" class="card-img-top" alt="{{ image.caption|default:'Event photo' }}">
+                                    <div class="card-body p-2">
+                                        <small class="text-muted d-block">{{ image.uploaded_at|date:"M j, Y" }}</small>
+                                        <small class="text-truncate d-block">{{ image.caption|default:"No caption" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if event.gallery_images.count > 6 %}
+                        <div class="text-center mt-3">
+                            <a href="{% url 'members:event_detail' event.id %}#gallery" class="btn btn-sm btn-outline-primary">
+                                View All {{ event.gallery_images.count }} Photos
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-circle me-2"></i> This event doesn't have any gallery photos yet
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dropzone {
+    border: 2px dashed #dee2e6;
+    border-radius: 5px;
+    background: #f8f9fa;
+    min-height: 200px;
+    padding: 20px;
+}
+.dz-message {
+    cursor: pointer;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<!-- Dropzone JS (optional for drag & drop) -->
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<script>
+// Initialize Dropzone if you want enhanced drag & drop
+document.addEventListener('DOMContentLoaded', function() {
+    // Simple implementation - in a real app you might want to use Dropzone.js
+    const fileInput = document.getElementById('fileInput');
+    const dzMessage = document.querySelector('.dz-message');
+    
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            dzMessage.innerHTML = `
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <h5>${this.files.length} file(s) selected</h5>
+                <p class="text-muted">Ready to upload</p>
+            `;
+        }
+    });
+    
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dzMessage.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    // Highlight drop area when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dzMessage.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dzMessage.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+        dzMessage.classList.add('bg-light');
+    }
+    
+    function unhighlight() {
+        dzMessage.classList.remove('bg-light');
+    }
+    
+    // Handle dropped files
+    dzMessage.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        
+        if (files.length > 0) {
+            dzMessage.innerHTML = `
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <h5>${files.length} file(s) selected</h5>
+                <p class="text-muted">Ready to upload</p>
+            `;
+        }
+    }
+});
+</script>
+{% endblock %}
