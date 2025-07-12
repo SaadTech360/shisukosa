@@ -70,7 +70,7 @@ def event(request):
     events = Events.objects.all()
     past_events = Events.objects.filter(status='DONE')
     return render(request,'members/events.html',{'events':events,'past_events':past_events})
-
+@login_required
 def create_event(request):
     if request.user.is_staff and request.method == 'POST':
         form = EventsCreationForm(request.POST,request.FILES)
@@ -86,6 +86,18 @@ def create_event(request):
         form = EventsCreationForm()
     return render(request,'members/create_event.html',{'form':form})
 
+@login_required
+def edit_event(request,pk):
+    event = get_object_or_404(Events,pk=pk)
+    form  = EventsCreationForm(instance=event)
+    return render(request,'members/edit_event.html',{'form':form})
+
+@login_required
+def delete_event(request,pk):
+    event = get_object_or_404(Events,pk=pk)
+    event.delete()
+    return redirect('/events/')
+
 def event_detail(request,pk):
     event = get_object_or_404(Events,pk=pk)
     return render(request,'members/event_detail.html',{'event':event})
@@ -94,6 +106,7 @@ def gallery(request):
     pictures = Gallery.objects.all()
     return render(request,'members/gallery.html',{'pictures':pictures})
 
+@login_required
 def gallery_upload(request):
     if request.method == 'POST' and request.user.is_staff:
         form = GalleryUploadForm(request.POST,request.FILES)
@@ -108,11 +121,15 @@ def gallery_upload(request):
         form = GalleryUploadForm()
 
     return render(request,'members/gallery_upload.html',{'form':form})
+
+@login_required
 def edit_gallery(request,pk):
     gallery = get_object_or_404(Gallery,pk=pk)
     form = GalleryUploadForm(instance=gallery)
     return render(request,'members/edit_gallery.html',{'form':form})
 
+@login_required
 def delete_gallery(request,pk):
     gallery = get_object_or_404(Gallery,pk=pk)
     gallery.delete()
+    return redirect('/gallery/')
