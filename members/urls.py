@@ -1,7 +1,7 @@
 from django.urls  import path
 from .views   import (homepage,members_list,create_admin_user,admin_dashboard,
    accept_member,delete_members,event,create_event,gallery,membership_request_list,
-   membership_request_detail,event_detail,gallery_upload)
+   membership_request_detail,event_detail,gallery_upload,edit_gallery)
 
 app_name = 'members'
 urlpatterns = [
@@ -16,6 +16,7 @@ urlpatterns = [
    path('event/<int:pk>/',event_detail,name='event_detail'),
    path('gallery/',gallery,name='gallery'),
    path('upload-gallery/',gallery_upload,name='gallery_upload'),
+   path('edit-gallery/<int:pk>/',edit_gallery,name='gallery_upload'),
    path('membership-request-lists/',membership_request_list,name='membership_request_list'),
    path('membership-request-detail/',membership_request_detail,name='membership_request_detail'),
 ]

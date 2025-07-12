@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
 
 {% block contents %}
+{%if messages%}
+<div>
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor%}
+</div>
+{%endif%}
 <div class="container py-5">
     <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <h2>Photo Gallery</h2>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+            <a href="{% url 'members:gallery_upload' %}" class="btn bg-success text-white">
                 <i class="fas fa-plus me-2"></i> Upload Photos
-            </button>
+            </a>
         </div>
     </div>
 
@@ -25,49 +32,20 @@
 
     <!-- Gallery Grid -->
     <div class="row g-3">
+        {% for gallery in pictures %}
         <!-- Event 1 -->
         <div class="col-sm-6 col-md-4 col-lg-3">
+            <h5>{{gallery.title}}</h5>
             <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal1">
-                <img src="https://via.placeholder.com/600x400/007bff/ffffff?text=Event+1" class="img-fluid rounded" alt="Event Image">
+                <img src="{{ gallery.image.url}}" class="img-fluid rounded" alt="Event Image">
             </a>
+            <p>{{ gallery.description}}</p>
         </div>
+        {% empty %}
+        <h4 class=" text-success text-center"> Gallery Is Empty . </h4>
+        {% endfor %}
         
-        <!-- Reunion 1 -->
-        <div class="col-sm-6 col-md-4 col-lg-3">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal2">
-                <img src="https://via.placeholder.com/600x400/28a745/ffffff?text=Reunion" class="img-fluid rounded" alt="Reunion Image">
-            </a>
-        </div>
         
-        <!-- Campus 1 -->
-        <div class="col-sm-6 col-md-4 col-lg-3">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal3">
-                <img src="https://via.placeholder.com/600x400/dc3545/ffffff?text=Campus" class="img-fluid rounded" alt="Campus Image">
-            </a>
-        </div>
-        
-        <!-- Event 2 -->
-        <div class="col-sm-6 col-md-4 col-lg-3">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal4">
-                <img src="https://via.placeholder.com/600x400/ffc107/000000?text=Event+2" class="img-fluid rounded" alt="Event Image">
-            </a>
-        </div>
-        
-        <!-- Reunion 2 -->
-        <div class="col-sm-6 col-md-4 col-lg-3">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal5">
-                <img src="https://via.placeholder.com/600x400/17a2b8/ffffff?text=Reunion+2" class="img-fluid rounded" alt="Reunion Image">
-            </a>
-        </div>
-        
-        <!-- Campus 2 -->
-        <div class="col-sm-6 col-md-4 col-lg-3">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal6">
-                <img src="https://via.placeholder.com/600x400/6c757d/ffffff?text=Campus+2" class="img-fluid rounded" alt="Campus Image">
-            </a>
-        </div>
-    </div>
-
     <!-- Pagination -->
     <nav aria-label="Page navigation" class="mt-5">
         <ul class="pagination justify-content-center">

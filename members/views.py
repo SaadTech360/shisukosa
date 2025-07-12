@@ -3,8 +3,9 @@ from accounts.models  import ShisMemberUser
 from accounts.forms   import MembersRegisterForm
 from django.contrib.auth.decorators  import login_required
 from django.http   import HttpResponseForbidden
-from .forms   import EventsCreationForm
-from .models   import Events
+from .forms   import EventsCreationForm,GalleryUploadForm
+from .models   import Events,Gallery
+from django.contrib    import messages
 
 def homepage(request):
     admins = ShisMemberUser.objects.filter(is_staff=True)
@@ -90,7 +91,28 @@ def event_detail(request,pk):
     return render(request,'members/event_detail.html',{'event':event})
     
 def gallery(request):
-    return render(request,'members/gallery.html')
+    pictures = Gallery.objects.all()
+    return render(request,'members/gallery.html',{'pictures':pictures})
 
 def gallery_upload(request):
-    return render(request,'members/gallery_upload.html')
+    if request.method == 'POST' and request.user.is_staff:
+        form = GalleryUploadForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Gallery Uploaded Successfully')
+        else:
+            messages.error(request,'Error While Uploading.')
+    elif not request.user.is_staff:
+        return HttpResponseForbidden('ONLY Admins Are Allow to Upload to Gallery.')
+    else:
+        form = GalleryUploadForm()
+
+    return render(request,'members/gallery_upload.html',{'form':form})
+def edit_gallery(request,pk):
+    gallery = get_object_or_404(Gallery,pk=pk)
+    form = GalleryUploadForm(instance=gallery)
+    return render(request,'members/edit_gallery.html',{'form':form})
+
+def delete_gallery(request,pk):
+    gallery = get_object_or_404(Gallery,pk=pk)
+    gallery.delete()

@@ -18,5 +18,11 @@ class Events(models.Model):
     
     def __str__(self):
         return self.events.title
+class Gallery(models.Model):
+    class Meta:
+        verbose_name_plural = 'galleries'
+    title = models.CharField(max_length=150)
+    description = models.CharField(max_length=250)
+    image = models.ImageField(upload_to='gallery/img')
     
 
