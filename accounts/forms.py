@@ -6,9 +6,9 @@ class MembersRegisterForm(UserCreationForm):
 
     class Meta:
         model = ShisMemberUser
-        fields = ['first_name','last_name','nick_name','email','phone','graduation_year']
+        fields = ['first_name','last_name','nick_name','photo','email','phone','graduation_year']
 
 class MembersChangeform(UserChangeForm):
     class Meta:
         model = ShisMemberUser
-        fields = ['first_name','last_name','nick_name','email','phone','graduation_year','status']
+        fields = ['first_name','last_name','nick_name','photo','email','phone','graduation_year','status']

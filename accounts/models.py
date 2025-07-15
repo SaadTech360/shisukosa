@@ -12,6 +12,7 @@ class ShisMemberUser(AbstractUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     nick_name = models.CharField(max_length=100)
+    photo  = models.ImageField(upload_to='profiles/img',default='profiles/student.png')
     email  = models.EmailField(unique=True)
     phone = models.IntegerField(null=True,blank=True)
     graduation_year = models.DateField(editable=True)
