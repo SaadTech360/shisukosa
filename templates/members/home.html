@@ -77,12 +77,12 @@
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="admin-card">
                         <div class="admin-image">
-                            <img src="{{ admin.photo.url }}" alt="{{ admin.full_name}}">
+                            <img src="{{ admin.photo.url }}" alt="{{ admin.first_name}}">
                         </div>
                         <div class="admin-info">
-                            <h4>{{ admin.first_name}}</h4>
+                            <h4>{{ admin.first_name}} {{ admin.last_name}}</h4>
                             <p>President</p>
-                            <p><small>Class of {{ admin.graduatoin_year}}</small></p>
+                            <p><small>Class of {{ admin.graduation_year}}</small></p>
                             <p>Leading our association with dedication and vision since 2020.</p>
                             <div class="social-links">
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>

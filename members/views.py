@@ -8,7 +8,7 @@ from .models   import Events,Gallery
 from django.contrib    import messages
 
 def homepage(request):
-    admins = ShisMemberUser.objects.filter(is_staff=True)
+    admins = ShisMemberUser.objects.filter(is_staff=True)[:3]
     return render(request,'members/home.html',{'admins':admins})
 
 def members_list(request):
