@@ -15,6 +15,8 @@ class ShisMemberUser(AbstractUser):
     photo  = models.ImageField(upload_to='profiles/img',default='profiles/student.png')
     email  = models.EmailField(unique=True)
     phone = models.IntegerField(null=True,blank=True)
+    note  = models.TextField(max_length=500,null=True,blank=True)
+    social_link = models.URLField(null=True,blank=True)
     graduation_year = models.DateField(editable=True)
     status = models.CharField(choices=MEMBER_STATUS,default='PENDING',max_length=50)
     request_date = models.DateTimeField(auto_now_add=True)
